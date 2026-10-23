@@ -36,7 +36,7 @@ $Upstreams         = @()                          # 上游列表，按优先级�
                                                     #   '127.0.0.1:7890'            省略协议时按 HTTP 处理
                                                     #   'direct'                    直连
                                                     #   31323（纯数字）             等价于 'http://127.0.0.1:31323'
-$ProxyPorts        = @(31323, 33333)              # 简易写法（全部按 HTTP 代理）；$Upstreams 为空时才使用
+$ProxyPorts        = @(31323, 1080, 8443)              # 简易写法（全部按 HTTP 代理）；$Upstreams 为空时才使用
 $AllowDirect       = $true                        # 所有上游代理都不可用时，是否回退到直连
 $HealthIntervalSec = 15                           # 后台健康检查间隔（秒）
 $ConnectTimeoutMs  = 3000                         # 连接单个上游的超时（毫秒）
@@ -129,7 +129,7 @@ namespace AdaptiveProxy
         {
             try
             {
-                _listener = new TcpListener(IPAddress.Any, _opt.ListenPort);
+                _listener = new TcpListener(IPAddress.Loopback, _opt.ListenPort);
                 _listener.Start();
             }
             catch (Exception ex)
@@ -137,7 +137,7 @@ namespace AdaptiveProxy
                 throw new Exception("无法监听端口 " + _opt.ListenPort + "（可能已被占用）：" + ex.Message, ex);
             }
 
-            Log("监听中：0.0.0.0:" + _opt.ListenPort);
+            Log("监听中：127.0.0.1:" + _opt.ListenPort);
             for (int i = 0; i < _upstreams.Length; i++)
             {
                 Log("  上游[" + i + "] = " + _upstreams[i].Describe());
