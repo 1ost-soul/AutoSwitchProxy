@@ -68,7 +68,7 @@ npm config delete https-proxy
 Task Scheduler is built into Windows; no additional software is required.
 
 1. Save `adaptive-proxy.ps1` to a permanent location, such as `C:\AdaptiveProxy\adaptive-proxy.ps1`.
-2. Open PowerShell/CMD as Administrator and run the following, updating the script path if necessary:
+2. Open CMD/PowerShell as Administrator and run the following, updating the script path if necessary:
 
 ```CMD
 powershell -NoProfile -ExecutionPolicy Bypass -Command "$s='D:\AutoSwitchProxy\adaptive-proxy.ps1'; $pw=\"$env:WINDIR\System32\WindowsPowerShell\v1.0\powershell.exe\"; $a=New-ScheduledTaskAction -Execute $pw -Argument ('-NoProfile -WindowStyle Hidden -ExecutionPolicy Bypass -File \"'+$s+'\"') -WorkingDirectory 'D:\AutoSwitchProxy'; $t=New-ScheduledTaskTrigger -AtLogOn; $p=New-ScheduledTaskPrincipal -UserId \"$env:USERDOMAIN\$env:USERNAME\" -LogonType Interactive -RunLevel Highest; Register-ScheduledTask -TaskName 'AdaptiveProxy' -Action $a -Trigger $t -Principal $p -Description 'Local adaptive proxy for command-line tools' -Force"
