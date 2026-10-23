@@ -68,29 +68,14 @@ npm config delete https-proxy
 Windows 自带任务计划程序，无需安装其他软件。
 
 1. 将 `adaptive-proxy.ps1` 放到固定目录，例如 `C:\AdaptiveProxy\adaptive-proxy.ps1`。
-2. 以管理员身份打开 PowerShell，执行以下命令。如脚本路径不同，请修改 `$Script`：
+2. 以管理员身份打开 CMD/Powershell，执行以下命令。如脚本路径不同，请修改 `$s='D:\AutoSwitchProxy\adaptive-proxy.ps1`：
 
-```powershell
-$Script = "C:\AdaptiveProxy\adaptive-proxy.ps1"
-$PowerShell = "$env:WINDIR\System32\WindowsPowerShell\v1.0\powershell.exe"
+```CMD
+powershell -NoProfile -ExecutionPolicy Bypass -Command "$s='D:\AutoSwitchProxy\adaptive-proxy.ps1'; $pw=\"$env:WINDIR\System32\WindowsPowerShell\v1.0\powershell.exe\"; $a=New-ScheduledTaskAction -Execute $pw -Argument ('-NoProfile -WindowStyle Hidden -ExecutionPolicy Bypass -File \"'+$s+'\"') -WorkingDirectory 'D:\AutoSwitchProxy'; $t=New-ScheduledTaskTrigger -AtLogOn; $p=New-ScheduledTaskPrincipal -UserId \"$env:USERDOMAIN\$env:USERNAME\" -LogonType Interactive -RunLevel Highest; Register-ScheduledTask -TaskName 'AdaptiveProxy' -Action $a -Trigger $t -Principal $p -Description 'Local adaptive proxy for command-line tools' -Force"
+```
 
-$Action = New-ScheduledTaskAction `
-    -Execute $PowerShell `
-    -Argument "-NoProfile -ExecutionPolicy Bypass -File `"$Script`""
-
-$Trigger = New-ScheduledTaskTrigger -AtLogOn
-
-$Principal = New-ScheduledTaskPrincipal `
-    -UserId "$env:USERDOMAIN\$env:USERNAME" `
-    -LogonType Interactive `
-    -RunLevel Highest
-
-Register-ScheduledTask `
-    -TaskName "AdaptiveProxy" `
-    -Action $Action `
-    -Trigger $Trigger `
-    -Principal $Principal `
-    -Description "Local adaptive proxy for command-line tools"
+```Powershell
+$s='D:\AutoSwitchProxy\adaptive-proxy.ps1'; $pw="$env:WINDIR\System32\WindowsPowerShell\v1.0\powershell.exe"; $a=New-ScheduledTaskAction -Execute $pw -Argument ('-NoProfile -WindowStyle Hidden -ExecutionPolicy Bypass -File "'+$s+'"') -WorkingDirectory 'D:\AutoSwitchProxy'; $t=New-ScheduledTaskTrigger -AtLogOn; $p=New-ScheduledTaskPrincipal -UserId "$env:USERDOMAIN\$env:USERNAME" -LogonType Interactive -RunLevel Highest; Register-ScheduledTask -TaskName 'AdaptiveProxy' -Action $a -Trigger $t -Principal $p -Description 'Local adaptive proxy for command-line tools' -Force
 ```
 
 3. 启动任务：
